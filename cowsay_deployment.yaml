@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cowsay
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    app: cowsay
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cowsay-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cowsay
+    spec:
+      containers:
+        - name: cowsay-container
+          image: mths/cowsay:latest
+          command: [ "nodemon"]
+          env:
+          - name: SLACK_TOKEN
+            value: MY_SLACK_TOKEN
+          ports:
+            - containerPort: 3000
